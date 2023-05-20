@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "kazoeru"
+version = "0.1.0"
+description = ""
+authors = ["Keksi <contact@keksi.me>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+disnake = {extras = ["speed"], version = "^2.8.1"}
+redis = {extras = ["hiredis"], version = "^4.5.5"}
+rich = "^13.3.5"
+python-dotenv = "^1.0.0"
+pyyaml = "^6.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
