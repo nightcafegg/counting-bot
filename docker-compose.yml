@@ -5,7 +5,6 @@ services:
     build: .
     image: nightcafegg/kazoeru
     container_name: kazoeru-bot
-    restart: unless-stopped
     environment:
       - REDIS_HOST=kazoeru-redis
       - REDIS_PORT=6379
