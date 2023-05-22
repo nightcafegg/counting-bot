@@ -20,7 +20,7 @@ class Counting(commands.Cog):
             guild = session.query(Guild).filter_by(id=msg.guild.id).first()
             if guild is None:
                 return
-            
+
         print(guild.channel, msg.channel.id)
 
         if msg.channel.id == guild.channel:
