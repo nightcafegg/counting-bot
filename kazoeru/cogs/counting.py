@@ -17,9 +17,9 @@ class Counting(commands.Cog):
             num = int(self.bot.redis.get(f"{msg.guild.id}:count") or 0)
             description = f"Wrong number, the next number was {num + 1}."
 
-            if not bool(self.bot.redis.get(f"{msg.guild.id}:numbersonly") or True):
+            if bool(self.bot.redis.get(f"{msg.guild.id}:numbersonly") or False):
                 if not msg.content.isdigit():
-                    await msg.add_reaction(Emote.error)
+                    return
 
             if msg.content.isdigit():
                 if msg.author.id == int(self.bot.redis.get(f"{msg.guild.id}:last") or 0):
@@ -29,6 +29,7 @@ class Counting(commands.Cog):
                     self.bot.redis.set(f"{msg.guild.id}:last", msg.author.id)
                     return await msg.add_reaction(Emote.success)
 
+            
             self.bot.redis.set(f"{msg.guild.id}:count", 0)
             self.bot.redis.set(f"{msg.guild.id}:last", 0)
             await msg.add_reaction(Emote.error)
