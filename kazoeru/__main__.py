@@ -1,10 +1,12 @@
-import disnake
-from disnake.ext import commands
-import os
-import redis
 import logging
-from kazoeru import config
+import os
 
+import disnake
+import redis
+import sqlalchemy
+from disnake.ext import commands
+
+from kazoeru import config
 
 log = logging.getLogger(__name__)
 _intents = disnake.Intents.default()
@@ -22,10 +24,14 @@ def load_extensions(bot: commands.AutoShardedInteractionBot):
 def main():
     disnake.VoiceClient.warn_nacl = False
 
+    engine = sqlalchemy.create_engine(
+        "sqlite:///kazoeru/data/kazoeru.sqlite",
+    )
+
     r = redis.Redis(
         host=os.environ.get("REDIS_HOST"),
         port=os.environ.get("REDIS_PORT"),
-        db=os.environ.get("REDIS_DB")
+        db=os.environ.get("REDIS_DB"),
     )
 
     command_sync_flags = commands.CommandSyncFlags(
@@ -37,11 +43,11 @@ def main():
     )
 
     bot = commands.AutoShardedInteractionBot(
-        intents=_intents,
-        command_sync_flags=command_sync_flags
+        intents=_intents, command_sync_flags=command_sync_flags
     )
 
     bot.redis = r
+    bot.engine = engine
 
     @bot.event
     async def on_ready():
@@ -49,7 +55,6 @@ def main():
         log.info(f"Logged in as {bot.user} ({bot.user.id})")
 
     bot.run(os.environ.get("DISCORD_TOKEN"))
-
 
 
 if __name__ == "__main__":

@@ -3,17 +3,18 @@ version: '3.9'
 services:
   bot:
     build: .
-    image: nightcafegg/kazoeru
-    container_name: kazoeru-bot
+    restart: unless-stopped
     environment:
-      - REDIS_HOST=kazoeru-redis
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
+    volumes:
+      - /etc/kazoeru/data:/bot/kazoeru/data
     
   redis:
     image: docker.dragonflydb.io/dragonflydb/dragonfly
-    container_name: kazoeru-redis
+    hostname: redis
     restart: unless-stopped
     volumes:
-      - /etc/redis/kazoeru:/data
+      - /etc/kazoeru/redis:/data
     

@@ -1,5 +1,7 @@
-import yaml
 from dataclasses import dataclass
+
+import yaml
+
 
 @dataclass
 class ColorConfig:
@@ -22,9 +24,9 @@ class EmoteConfig:
     info: str
 
 
-with open('config.yml', 'r') as f:
+with open("config.yml", "r") as f:
     config = yaml.safe_load(f)
 
-Color = ColorConfig(**config['color'])
-Image = ImageConfig(**config['image'])
-Emote = EmoteConfig(**config['emote'])
+Color = ColorConfig(**config["color"])
+Image = ImageConfig(**config["image"])
+Emote = EmoteConfig(**config["emote"])

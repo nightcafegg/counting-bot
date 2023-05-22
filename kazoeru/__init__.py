@@ -1,8 +1,8 @@
 import logging
-from rich.logging import RichHandler
-import dotenv
 import sys
 
+import dotenv
+from rich.logging import RichHandler
 
 sys.stdout.write("\033[2J\033[H")
 
@@ -15,5 +15,6 @@ def setup_logging():
         level=logging.INFO, handlers=[RichHandler(rich_tracebacks=True)]
     )
     logging.getLogger("disnake").setLevel(logging.INFO)
+
 
 setup_logging()
