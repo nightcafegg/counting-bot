@@ -17,7 +17,7 @@ class Counting(commands.Cog):
             num = int(self.bot.redis.get(f"{msg.guild.id}:count") or 0)
             description = f"Wrong number, the next number was {num + 1}."
 
-            if bool(self.bot.redis.get(f"{msg.guild.id}:numbersonly") or False):
+            if not bool(self.bot.redis.get(f"{msg.guild.id}:numbersonly") or True):
                 if not msg.content.isdigit():
                     await msg.add_reaction(Emote.error)
 
