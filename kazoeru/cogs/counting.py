@@ -20,12 +20,16 @@ class Counting(commands.Cog):
             guild = session.query(Guild).filter_by(id=msg.guild.id).first()
             if guild is None:
                 return
+            
+        print(guild.channel, msg.channel.id)
 
-        if msg.channel.id == int(guild.channel or 0):
+        if msg.channel.id == guild.channel:
             num = int(self.bot.redis.get(f"{msg.guild.id}:count") or 0)
             description = f"Wrong number, the next number was {num + 1}."
 
-            if bool(guild.numonly or False):
+            print(guild.numonly)
+
+            if guild.numonly:
                 if not msg.content.isdigit():
                     return
 

@@ -76,10 +76,10 @@ class Admin(commands.Cog):
             with Session(self.bot.engine) as session:
                 guild = session.query(Guild).filter_by(id=inter.guild.id).first()
                 if guild is None:
-                    guild = Guild(id=inter.guild.id, numbersonly=enabled)
+                    guild = Guild(id=inter.guild.id, numonly=enabled)
                     session.add(guild)
                 else:
-                    guild.numbersonly = enabled
+                    guild.numonly = enabled
                 session.commit()
 
             embed = Embed.success(
