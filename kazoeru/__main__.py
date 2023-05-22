@@ -53,21 +53,12 @@ def main():
     async def on_ready():
         load_extensions(bot)
         log.info(f"Logged in as {bot.user} ({bot.user.id})")
+        log.info(f"Connected to {len(bot.guilds)} guilds")
 
-    @bot.slash_command(description="Shows information about the bot.")
-    async def info(inter: disnake.ApplicationCommandInteraction) -> None:
-        embed = disnake.Embed(
-            title="Kazoeru",
-            description="A counting bot for Discord.",
-            color=disnake.Color.blurple(),
-        )
-        embed.add_field(
-            name="Guilds",
-            value=f"> {len(bot.guilds)}",
-            inline=True,
-        )
-
-        await inter.response.send_message(embed=embed)
+    @bot.event
+    async def on_guild_join(guild: disnake.Guild):
+        log.info(f"Joined guild {guild.name} [{guild.id}]")
+        log.info(f"Connected to {len(bot.guilds)} guilds")
 
     bot.run(os.environ.get("DISCORD_TOKEN"))
 
