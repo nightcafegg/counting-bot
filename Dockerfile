@@ -14,7 +14,6 @@ RUN pip install poetry==1.3
 # Export requirements after copying req files
 COPY poetry.lock pyproject.toml ./
 RUN poetry export --without-hashes > requirements.txt
-RUN poetry version -s > VERSION
 RUN pip uninstall poetry -y
 RUN pip install -Ur requirements.txt
 

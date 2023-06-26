@@ -36,10 +36,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Get version from VERSION file
-      - name: Get version from VERSION file
+      # Get version from pyproject.toml without poetry
+      - name: Get version
         id: version
-        run: echo VERSION=$(cat VERSION) >> $GITHUB_ENV
+        run: echo VERSION=$(grep -m 1 version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3) >> $GITHUB_ENV
 
 
       # Build and push Docker images
