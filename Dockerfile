@@ -7,7 +7,7 @@ ENV PIP_NO_CACHE_DIR=false
 WORKDIR /bot
 
 # Install project dependencies
-RUN apt update -y
+RUN apt-get update -y
 RUN pip install -U pip wheel setuptools
 RUN pip install poetry==1.3
 
