@@ -30,5 +30,8 @@ with open("config.yml", "r") as f:
 Color = ColorConfig(**config["color"])
 Image = ImageConfig(**config["image"])
 Emote = EmoteConfig(**config["emote"])
+<<<<<<< HEAD
 Image = ImageConfig(**config["image"])
 Emote = EmoteConfig(**config["emote"])
+=======
+>>>>>>> 89950158ccee811ea71b643755e0e2ef417c5088

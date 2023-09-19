@@ -1,7 +1,14 @@
 import disnake
 from disnake.ext import commands
+<<<<<<< HEAD
 
 from kazoeru.config import Emote
+=======
+from sqlalchemy.orm import Session
+
+from kazoeru.config import Emote
+from kazoeru.db.models import Guild
+>>>>>>> 89950158ccee811ea71b643755e0e2ef417c5088
 from kazoeru.embed import Embed
 
 
@@ -14,16 +21,27 @@ class Counting(commands.Cog):
         if msg.author.bot:
             return
 
-        if msg.channel.id == int(self.bot.redis.get(f"{msg.guild.id}:channel") or 0):
+        with Session(self.bot.engine) as session:
+            guild = session.query(Guild).filter_by(id=msg.guild.id).first()
+            if guild is None:
+                return
+
+        print(guild.channel, msg.channel.id)
+
+        if msg.channel.id == guild.channel:
             num = int(self.bot.redis.get(f"{msg.guild.id}:count") or 0)
             description = f"Wrong number, the next number was {num + 1}."
 
-            if bool(self.bot.redis.get(f"{msg.guild.id}:numbersonly") or False):
+            print(guild.numonly)
+
+            if guild.numonly:
                 if not msg.content.isdigit():
-                    await msg.add_reaction(Emote.error)
+                    return
 
             if msg.content.isdigit():
-                if msg.author.id == int(self.bot.redis.get(f"{msg.guild.id}:last") or 0):
+                if msg.author.id == int(
+                    self.bot.redis.get(f"{msg.guild.id}:last") or 0
+                ):
                     description = "You can't count twice in a row!"
                 elif int(msg.content) == num + 1:
                     self.bot.redis.incr(f"{msg.guild.id}:count")
@@ -36,10 +54,14 @@ class Counting(commands.Cog):
             embed = Embed.error(
                 guild=msg.guild,
                 title=f"Ruined it at {num}! {description}",
-                footer=False
+                footer=False,
             )
             return await msg.reply(embed=embed)
 
 
 def setup(bot):
+<<<<<<< HEAD
     bot.add_cog(Counting(bot))    bot.add_cog(Counting(bot))
+=======
+    bot.add_cog(Counting(bot))
+>>>>>>> 89950158ccee811ea71b643755e0e2ef417c5088

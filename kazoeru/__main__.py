@@ -2,8 +2,12 @@ import logging
 import os
 
 import disnake
-import redis
 from disnake.ext import commands
+import os
+import redis
+import logging
+from kazoeru import config
+
 
 log = logging.getLogger(__name__)
 _intents = disnake.Intents.default()
@@ -20,6 +24,10 @@ def load_extensions(bot: commands.AutoShardedInteractionBot):
 
 def main():
     disnake.VoiceClient.warn_nacl = False
+
+    engine = sqlalchemy.create_engine(
+        "sqlite:///kazoeru/data/kazoeru.sqlite",
+    )
 
     r = redis.Redis(
         host=os.environ.get("REDIS_HOST"),
@@ -40,11 +48,18 @@ def main():
     )
 
     bot.redis = r
+    bot.engine = engine
 
     @bot.event
     async def on_ready():
         load_extensions(bot)
         log.info(f"Logged in as {bot.user} ({bot.user.id})")
+        log.info(f"Connected to {len(bot.guilds)} guilds")
+
+    @bot.event
+    async def on_guild_join(guild: disnake.Guild):
+        log.info(f"Joined guild {guild.name} [{guild.id}]")
+        log.info(f"Connected to {len(bot.guilds)} guilds")
 
     bot.run(os.environ.get("DISCORD_TOKEN"))
 
