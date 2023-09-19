@@ -1,8 +1,9 @@
-from disnake.ext import commands
-import disnake
-from kazoeru.embed import Embed
 import logging
 
+import disnake
+from disnake.ext import commands
+
+from kazoeru.embed import Embed
 
 log = logging.getLogger(__name__)
 
@@ -70,4 +71,4 @@ class Admin(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Admin(bot))
+    bot.add_cog(Admin(bot))    bot.add_cog(Admin(bot))

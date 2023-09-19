@@ -1,6 +1,6 @@
 import disnake
+
 from kazoeru import config
-from typing import Optional
 
 
 class Embed:
@@ -50,4 +50,4 @@ class Embed:
             embed.set_footer(
                 text=f"{guild.name} • {guild.id}"
             )
-        return embed
+        return embed        return embed

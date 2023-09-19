@@ -1,7 +1,8 @@
-from disnake.ext import commands
-from kazoeru.embed import Embed
-from kazoeru.config import Emote
 import disnake
+from disnake.ext import commands
+
+from kazoeru.config import Emote
+from kazoeru.embed import Embed
 
 
 class Counting(commands.Cog):
@@ -41,4 +42,4 @@ class Counting(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Counting(bot))
+    bot.add_cog(Counting(bot))    bot.add_cog(Counting(bot))
