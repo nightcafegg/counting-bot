@@ -1,17 +1,12 @@
 import logging
 
 import disnake
-<<<<<<< HEAD
-from disnake.ext import commands
-
-=======
-import sqlalchemy
 from disnake.ext import commands
 from sqlalchemy.orm import Session
 
 from kazoeru.db.models import Guild
->>>>>>> 89950158ccee811ea71b643755e0e2ef417c5088
 from kazoeru.embed import Embed
+
 
 log = logging.getLogger(__name__)
 
@@ -23,10 +18,7 @@ class Admin(commands.Cog):
         Guild.__table__.create(self.bot.engine, checkfirst=True)
 
     @commands.Cog.listener()
-    async def on_slash_command_error(
-        self, inter: disnake.ApplicationCommandInteraction, error: Exception
-    ) -> None:
-        # send error message to user telling them they don't have permission to use the command
+    async def on_slash_command_error(self, inter: disnake.ApplicationCommandInteraction, error: Exception) -> None:
         if isinstance(error, commands.MissingPermissions):
             embed = Embed.error(
                 inter.guild,
@@ -35,17 +27,11 @@ class Admin(commands.Cog):
             )
             return await inter.response.send_message(embed=embed, ephemeral=True)
 
-        embed = Embed.error(
-            inter.guild, "Error!", "Something went wrong, please try again later."
-        )
+        embed = Embed.error(inter.guild, "Error!", "Something went wrong, please try again later.")
 
-    @commands.slash_command(
-        description="Configure the channel you would like to count in."
-    )
+    @commands.slash_command(description="Configure the channel you would like to count in.")
     @commands.has_permissions(administrator=True, manage_guild=True)
-    async def channel(
-        self, inter: disnake.ApplicationCommandInteraction, channel: disnake.TextChannel
-    ) -> None:
+    async def channel(self, inter: disnake.ApplicationCommandInteraction, channel: disnake.TextChannel) -> None:
         try:
             with Session(self.bot.engine) as session:
                 guild = session.query(Guild).filter_by(id=inter.guild.id).first()
@@ -74,9 +60,7 @@ class Admin(commands.Cog):
         description="Ruins the count if any message is sent if it is not either a valid number or bot command."
     )
     @commands.has_permissions(administrator=True, manage_guild=True)
-    async def numbersonly(
-        self, inter: disnake.ApplicationCommandInteraction, enabled: bool
-    ) -> None:
+    async def numbersonly(self, inter: disnake.ApplicationCommandInteraction, enabled: bool) -> None:
         try:
             with Session(self.bot.engine) as session:
                 guild = session.query(Guild).filter_by(id=inter.guild.id).first()
@@ -87,9 +71,7 @@ class Admin(commands.Cog):
                     guild.numonly = enabled
                 session.commit()
 
-            embed = Embed.success(
-                inter.guild, f"Numbers only {'enabled' if enabled else 'disabled'}!"
-            )
+            embed = Embed.success(inter.guild, f"Numbers only {'enabled' if enabled else 'disabled'}!")
             await inter.response.send_message(embed=embed)
         except Exception as e:
             log.error(e)
@@ -102,8 +84,4 @@ class Admin(commands.Cog):
 
 
 def setup(bot):
-<<<<<<< HEAD
-    bot.add_cog(Admin(bot))    bot.add_cog(Admin(bot))
-=======
     bot.add_cog(Admin(bot))
->>>>>>> 89950158ccee811ea71b643755e0e2ef417c5088

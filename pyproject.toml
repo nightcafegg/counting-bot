@@ -17,10 +17,37 @@ sqlalchemy = "^2.0.15"
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 ruff = "^0.0.290"
+isort = "^5.12.0"
+pre-commit = "^3.4.0"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.isort]
+line_length = 120
+profile = "black"
+atomic = true
+ensure_newline_before_comments = true
+force_grid_wrap = 0
+include_trailing_comma = true
+lines_after_imports = 2
+multi_line_output = 3
+use_parentheses = true
+known_first_party = ["kazoeru"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+select = [
+    "E",    # pycodestyle
+    "W",    # pycodestyle
+    "F",    # pyflakes
+]
 
 [tool.poe.tasks]
-fmt = "ruff --fix . && black ."
-lint = "ruff . && black -- --check ."
+lint = "pre-commit run --all-files"
+precomit = "pre-commit install"
 
 [build-system]
 requires = ["poetry-core"]

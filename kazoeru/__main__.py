@@ -2,11 +2,9 @@ import logging
 import os
 
 import disnake
-from disnake.ext import commands
-import os
 import redis
-import logging
-from kazoeru import config
+import sqlalchemy
+from disnake.ext import commands
 
 
 log = logging.getLogger(__name__)
@@ -43,9 +41,7 @@ def main():
         sync_on_cog_actions=True,
     )
 
-    bot = commands.AutoShardedInteractionBot(
-        intents=_intents, command_sync_flags=command_sync_flags
-    )
+    bot = commands.AutoShardedInteractionBot(intents=_intents, command_sync_flags=command_sync_flags)
 
     bot.redis = r
     bot.engine = engine

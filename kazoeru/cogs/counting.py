@@ -1,14 +1,9 @@
 import disnake
 from disnake.ext import commands
-<<<<<<< HEAD
-
-from kazoeru.config import Emote
-=======
 from sqlalchemy.orm import Session
 
 from kazoeru.config import Emote
 from kazoeru.db.models import Guild
->>>>>>> 89950158ccee811ea71b643755e0e2ef417c5088
 from kazoeru.embed import Embed
 
 
@@ -39,9 +34,7 @@ class Counting(commands.Cog):
                     return
 
             if msg.content.isdigit():
-                if msg.author.id == int(
-                    self.bot.redis.get(f"{msg.guild.id}:last") or 0
-                ):
+                if msg.author.id == int(self.bot.redis.get(f"{msg.guild.id}:last") or 0):
                     description = "You can't count twice in a row!"
                 elif int(msg.content) == num + 1:
                     self.bot.redis.incr(f"{msg.guild.id}:count")
@@ -60,8 +53,4 @@ class Counting(commands.Cog):
 
 
 def setup(bot):
-<<<<<<< HEAD
-    bot.add_cog(Counting(bot))    bot.add_cog(Counting(bot))
-=======
     bot.add_cog(Counting(bot))
->>>>>>> 89950158ccee811ea71b643755e0e2ef417c5088

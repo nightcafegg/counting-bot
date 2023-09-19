@@ -10,11 +10,10 @@ services:
       - REDIS_DB=0
     volumes:
       - /etc/kazoeru/data:/bot/kazoeru/data
-    
+
   redis:
     image: docker.dragonflydb.io/dragonflydb/dragonfly
     hostname: redis
     restart: unless-stopped
     volumes:
       - /etc/kazoeru/redis:/data
-    
