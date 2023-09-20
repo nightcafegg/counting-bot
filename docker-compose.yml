@@ -1,19 +1,37 @@
 version: '3.9'
 
 services:
-  bot:
+  kazoeru:
     build: .
     restart: unless-stopped
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_DB=0
+      - REDIS_URI=redis://redis:6379
+      - DB_BIND=postgresql+asyncpg://kazoeru:kazoeru@postgres:5432/kazoeru
     volumes:
       - /etc/kazoeru/data:/bot/kazoeru/data
+
+  postgres:
+    image: postgres:13-alpine
+    hostname: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=kazoeru
+      - POSTGRES_USER=kazoeru
+      - POSTGRES_PASSWORD=kazoeru
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kazoeru"]
+      interval: 2s
+      timeout: 1s
+      retries: 5
 
   redis:
     image: docker.dragonflydb.io/dragonflydb/dragonfly
     hostname: redis
     restart: unless-stopped
+    command:
+      --save 60 1
     volumes:
-      - /etc/kazoeru/redis:/data
+      - redis:/data
+
+volumes:
+  redis:
