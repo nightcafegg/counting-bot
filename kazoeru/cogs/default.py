@@ -5,6 +5,7 @@ from disnake.ext import commands
 
 from kazoeru import constants
 from kazoeru.bot import Kazoeru
+from kazoeru.embed import Embed
 
 
 log = logging.getLogger(__name__)
@@ -24,19 +25,22 @@ class Default(commands.Cog):
         log.info(f"Joined guild {guild.name} [{guild.id}]")
 
         channel = self.bot.get_channel(constants.Channels.log)
-        embed = disnake.Embed(
-            color=constants.Colors.success,
+        embed = Embed.info(
+            guild,
+            title="Joined Guild",
         )
-        embed.set_author(name="Joined Guild", icon_url=constants.Icons.success)
-        embed.add_field(name="Name", value=f"> {guild.name} [{guild.id}]", inline=False)
-        embed.add_field(name="Owner", value=f"> {guild.owner} [{guild.owner.id}]", inline=False)
+        embed.add_field(name="Name", value=f"> `{guild.name}`", inline=False)
+        embed.add_field(name="ID", value=f"> `{guild.id}`", inline=False)
+        embed.add_field(name="Members", value=f"> `{guild.member_count}`", inline=False)
 
         await channel.send(embed=embed)
 
     @commands.slash_command(description="Information about the bot.")
     async def info(self, inter: disnake.ApplicationCommandInteraction) -> None:
-        embed = disnake.Embed(color=constants.Colors.info)
-        embed.set_author(name="Kazoeru", icon_url=constants.Icons.info)
+        embed = Embed.info(
+            inter.guild,
+            title="Info | Kazoeru",
+        )
         embed.add_field(name="Uptime", value=f"> {self.bot.uptime}", inline=False)
         embed.add_field(name="Guilds", value=f"> {len(self.bot.guilds)}", inline=False)
 

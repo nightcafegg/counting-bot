@@ -20,7 +20,7 @@ class Database:
 
 class Redis:
     uri: str = environ.get("REDIS_URI", "redis://redis:6379")
-    use_fakeredis: bool = environ.get("REDIS_FAKE", "false").lower() == "true"
+    use_fakeredis: bool = environ.get("USE_FAKEREDIS", "false").lower() == "true"
 
 
 class Colors:

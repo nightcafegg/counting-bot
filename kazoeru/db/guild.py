@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer
+from sqlalchemy import BigInteger, Boolean, Column
 
 from kazoeru.db.base import Base
 
@@ -6,8 +6,8 @@ from kazoeru.db.base import Base
 class Guild(Base):
     __tablename__ = "guilds"
 
-    id = Column(Integer, primary_key=True)
-    channel = Column(Integer, default=0)
+    id = Column(BigInteger, primary_key=True)
+    channel = Column(BigInteger, default=0)
     numonly = Column(Boolean, default=False)
 
     def __repr__(self):
