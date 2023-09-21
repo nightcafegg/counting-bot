@@ -24,6 +24,18 @@ def load_extensions(bot: commands.AutoShardedInteractionBot):
             log.info(f"Loaded extension kazoeru.cogs.{file[:-3]}")
 
 
+async def console_listener(loop: asyncio.AbstractEventLoop, future: asyncio.Future):
+    while True:
+        try:
+            line = await loop.run_in_executor(None, sys.stdin.readline)
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt received")
+
+        if line.strip() in ("quit", "exit", "stop", "shutdown", "q"):
+            future.cancel()
+            break
+
+
 async def main():
     disnake.VoiceClient.warn_nacl = False
 
@@ -60,12 +72,16 @@ async def main():
     loop = asyncio.get_running_loop()
 
     future: asyncio.Future = asyncio.ensure_future(bot.start(constants.Client.token or ""), loop=loop)
+    listener_future: asyncio.Future = asyncio.ensure_future(console_listener(loop, future))
 
     if sys.platform != "win32":
         loop.add_signal_handler(signal.SIGINT, lambda: future.cancel())
         loop.add_signal_handler(signal.SIGTERM, lambda: future.cancel())
+
     try:
         await future
+        if constants.Client.debug:
+            await listener_future
     except asyncio.CancelledError:
         log.info("Received signal to terminate bot and event loop")
     finally:
@@ -77,4 +93,6 @@ if __name__ == "__main__":
     try:
         sys.exit(asyncio.run(main()))
     except KeyboardInterrupt:
+        pass
+    finally:
         sys.exit(0)

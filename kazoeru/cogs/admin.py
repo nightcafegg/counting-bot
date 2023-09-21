@@ -80,12 +80,7 @@ class Admin(commands.Cog):
             )
             await inter.response.send_message(embed=embed, ephemeral=True)
 
-    @commands.slash_command(description="Exits the bot.", hidden=True)
-    @commands.is_owner()
-    async def exit(self, inter: disnake.ApplicationCommandInteraction) -> None:
-        embed = Embed.success(inter.guild, "Exiting...")
-        await inter.response.send_message(embed=embed, ephemeral=True)
-        await self.bot.close()
+    # TODO: Add a way to set the count number
 
 
 def setup(bot):

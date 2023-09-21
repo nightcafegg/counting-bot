@@ -1,13 +1,14 @@
 from os import environ
 
 
-__all__ = ("Client", "Colors", "Icons", "Emojis")
+__all__ = ("Client", "Channels", "Colors", "Icons", "Emojis")
 
 
 class Client:
     name: str = "Kazoeru"
     token: str = environ.get("BOT_TOKEN")
     owner: int = 527147599942385674
+    debug: bool = environ.get("DEBUG", "false").lower() == "true"
 
 
 class Channels:
