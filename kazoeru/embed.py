@@ -1,46 +1,32 @@
-from typing import Optional
-
 import disnake
 
-from kazoeru import config
+from kazoeru import constants
 
 
 class Embed:
     @staticmethod
-    def success(
-        guild: disnake.Guild, title: str, description: str = None, footer: bool = True
-    ) -> disnake.Embed:
+    def success(guild: disnake.Guild, title: str, description: str = None) -> disnake.Embed:
         embed = disnake.Embed(
             description=f"> {description}" if description else None,
-            color=config.Color.success,
+            color=constants.Colors.success,
         )
-        embed.set_author(name=title, icon_url=config.Image.success)
-        if footer:
-            embed.set_footer(text=f"{guild.name} • {guild.id}")
+        embed.set_author(name=title, icon_url=constants.Icons.success)
         return embed
 
     @staticmethod
-    def error(
-        guild: disnake.Guild, title: str, description: str = None, footer: bool = True
-    ) -> disnake.Embed:
+    def error(guild: disnake.Guild, title: str, description: str = None) -> disnake.Embed:
         embed = disnake.Embed(
             description=f"> {description}" if description else None,
-            color=config.Color.error,
+            color=constants.Colors.error,
         )
-        embed.set_author(name=title, icon_url=config.Image.error)
-        if footer:
-            embed.set_footer(text=f"{guild.name} • {guild.id}")
+        embed.set_author(name=title, icon_url=constants.Icons.error)
         return embed
 
     @staticmethod
-    def info(
-        guild: disnake.Guild, title: str, description: str = None, footer: bool = True
-    ) -> disnake.Embed:
+    def info(guild: disnake.Guild, title: str, description: str = None) -> disnake.Embed:
         embed = disnake.Embed(
             description=f"> {description}" if description else None,
-            color=config.Color.info,
+            color=constants.Colors.info,
         )
-        embed.set_author(name=title, icon_url=config.Image.info)
-        if footer:
-            embed.set_footer(text=f"{guild.name} • {guild.id}")
+        embed.set_author(name=title, icon_url=constants.Icons.info)
         return embed

@@ -1,27 +1,22 @@
 import logging
 
 import disnake
-import sqlalchemy
 from disnake.ext import commands
-from sqlalchemy.orm import Session
 
-from kazoeru.db.models import Guild
+from kazoeru.bot import Kazoeru
+from kazoeru.db.guild import Guild
 from kazoeru.embed import Embed
+
 
 log = logging.getLogger(__name__)
 
 
 class Admin(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Kazoeru):
         self.bot = bot
 
-        Guild.__table__.create(self.bot.engine, checkfirst=True)
-
     @commands.Cog.listener()
-    async def on_slash_command_error(
-        self, inter: disnake.ApplicationCommandInteraction, error: Exception
-    ) -> None:
-        # send error message to user telling them they don't have permission to use the command
+    async def on_slash_command_error(self, inter: disnake.ApplicationCommandInteraction, error: Exception) -> None:
         if isinstance(error, commands.MissingPermissions):
             embed = Embed.error(
                 inter.guild,
@@ -30,26 +25,20 @@ class Admin(commands.Cog):
             )
             return await inter.response.send_message(embed=embed, ephemeral=True)
 
-        embed = Embed.error(
-            inter.guild, "Error!", "Something went wrong, please try again later."
-        )
+        embed = Embed.error(inter.guild, "Error!", "Something went wrong, please try again later.")
 
-    @commands.slash_command(
-        description="Configure the channel you would like to count in."
-    )
+    @commands.slash_command(description="Configure the channel you would like to count in.")
     @commands.has_permissions(administrator=True, manage_guild=True)
-    async def channel(
-        self, inter: disnake.ApplicationCommandInteraction, channel: disnake.TextChannel
-    ) -> None:
+    async def channel(self, inter: disnake.ApplicationCommandInteraction, channel: disnake.TextChannel) -> None:
         try:
-            with Session(self.bot.engine) as session:
-                guild = session.query(Guild).filter_by(id=inter.guild.id).first()
-                if guild is None:
-                    guild = Guild(id=inter.guild.id, channel=channel.id)
-                    session.add(guild)
+            async with self.bot.db.begin() as session:
+                guildData = await session.get(Guild, inter.guild.id)
+                if guildData is None:
+                    guildData = Guild(id=inter.guild.id, channel=channel.id)
+                    session.add(guildData)
                 else:
-                    guild.channel = channel.id
-                session.commit()
+                    guildData.channel = channel.id
+                await session.commit()
             embed = Embed.success(
                 inter.guild,
                 "Counting channel set!",
@@ -69,22 +58,18 @@ class Admin(commands.Cog):
         description="Ruins the count if any message is sent if it is not either a valid number or bot command."
     )
     @commands.has_permissions(administrator=True, manage_guild=True)
-    async def numbersonly(
-        self, inter: disnake.ApplicationCommandInteraction, enabled: bool
-    ) -> None:
+    async def numbersonly(self, inter: disnake.ApplicationCommandInteraction, enabled: bool) -> None:
         try:
-            with Session(self.bot.engine) as session:
-                guild = session.query(Guild).filter_by(id=inter.guild.id).first()
-                if guild is None:
-                    guild = Guild(id=inter.guild.id, numonly=enabled)
-                    session.add(guild)
+            async with self.bot.db.begin() as session:
+                guildData = await session.get(Guild, inter.guild.id)
+                if guildData is None:
+                    guildData = Guild(id=inter.guild.id, numonly=enabled)
+                    session.add(guildData)
                 else:
-                    guild.numonly = enabled
-                session.commit()
+                    guildData.numonly = enabled
+                await session.commit()
 
-            embed = Embed.success(
-                inter.guild, f"Numbers only {'enabled' if enabled else 'disabled'}!"
-            )
+            embed = Embed.success(inter.guild, f"Numbers only {'enabled' if enabled else 'disabled'}!")
             await inter.response.send_message(embed=embed)
         except Exception as e:
             log.error(e)
@@ -94,6 +79,8 @@ class Admin(commands.Cog):
                 "Something went wrong, please try again later.",
             )
             await inter.response.send_message(embed=embed, ephemeral=True)
+
+    # TODO: Add a way to set the count number
 
 
 def setup(bot):

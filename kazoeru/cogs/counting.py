@@ -1,14 +1,14 @@
 import disnake
 from disnake.ext import commands
-from sqlalchemy.orm import Session
 
-from kazoeru.config import Emote
-from kazoeru.db.models import Guild
+from kazoeru.bot import Kazoeru
+from kazoeru.constants import Emojis
+from kazoeru.db.guild import Guild
 from kazoeru.embed import Embed
 
 
 class Counting(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Kazoeru):
         self.bot = bot
 
     @commands.Cog.listener()
@@ -16,43 +16,68 @@ class Counting(commands.Cog):
         if msg.author.bot:
             return
 
-        with Session(self.bot.engine) as session:
-            guild = session.query(Guild).filter_by(id=msg.guild.id).first()
-            if guild is None:
+        async with self.bot.db.begin() as session:
+            guildData = await session.get(Guild, msg.guild.id)
+            if guildData is None:
                 return
 
-        print(guild.channel, msg.channel.id)
+            if msg.channel.id != guildData.channel:
+                return
 
-        if msg.channel.id == guild.channel:
-            num = int(self.bot.redis.get(f"{msg.guild.id}:count") or 0)
+            num = int(await self.bot.redis.get(f"{msg.guild.id}:count") or 0)
             description = f"Wrong number, the next number was {num + 1}."
 
-            print(guild.numonly)
-
-            if guild.numonly:
+            if guildData.numonly:
                 if not msg.content.isdigit():
                     return
 
             if msg.content.isdigit():
-                if msg.author.id == int(
-                    self.bot.redis.get(f"{msg.guild.id}:last") or 0
-                ):
+                if msg.author.id == int(await self.bot.redis.get(f"{msg.guild.id}:last") or 0):
                     description = "You can't count twice in a row!"
                 elif int(msg.content) == num + 1:
-                    self.bot.redis.incr(f"{msg.guild.id}:count")
-                    self.bot.redis.set(f"{msg.guild.id}:last", msg.author.id)
-                    return await msg.add_reaction(Emote.success)
+                    await self.bot.redis.incr(f"{msg.guild.id}:count")
+                    await self.bot.redis.set(f"{msg.guild.id}:last", msg.author.id)
+                    return await msg.add_reaction(Emojis.success)
 
-            self.bot.redis.set(f"{msg.guild.id}:count", 0)
-            self.bot.redis.set(f"{msg.guild.id}:last", 0)
-            await msg.add_reaction(Emote.error)
-            embed = Embed.error(
-                guild=msg.guild,
-                title=f"Ruined it at {num}! {description}",
-                footer=False,
-            )
-            return await msg.reply(embed=embed)
+            # set guildData.record if num > guildData.record
+            if num > guildData.record:
+                guildData.record = num
+                await session.commit()
+
+        await self.bot.redis.set(f"{msg.guild.id}:count", 0)
+        await self.bot.redis.set(f"{msg.guild.id}:last", 0)
+        await msg.add_reaction(Emojis.error)
+        embed = Embed.error(guild=msg.guild, title=f"Ruined it at {num}! {description}")
+        return await msg.reply(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, msg: disnake.Message):
+        if msg.author.bot:
+            return
+
+        async with self.bot.db.begin() as session:
+            guildData = await session.get(Guild, msg.guild.id)
+            if guildData is None:
+                return
+
+        if msg.channel.id != guildData.channel:
+            return
+
+        if not msg.content.isdigit():
+            return
+
+        num = int(await self.bot.redis.get(f"{msg.guild.id}:count") or 0)
+
+        if int(msg.content) == num:
+            async for message in msg.channel.history(limit=100):
+                if message.content.isdigit():
+                    await self.bot.redis.set(f"{msg.guild.id}:count", int(message.content))
+                    await self.bot.redis.set(f"{msg.guild.id}:last", message.author.id)
+                    return
+
+    # TODO: Add a command to see the record for the guild
+    # TODO: Add a command to see a leaderboard for all guilds
 
 
-def setup(bot):
+def setup(bot: Kazoeru):
     bot.add_cog(Counting(bot))

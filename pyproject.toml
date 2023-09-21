@@ -12,10 +12,46 @@ redis = {extras = ["hiredis"], version = "^4.5.5"}
 rich = "^13.3.5"
 python-dotenv = "^1.0.0"
 pyyaml = "^6.0"
-sqlalchemy = "^2.0.15"
-
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.21"}
+asyncpg = "^0.28.0"
+arrow = "^1.2.3"
+fakeredis = "^2.18.1"
 
 [tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+ruff = "^0.0.290"
+isort = "^5.12.0"
+pre-commit = "^3.4.0"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.isort]
+line_length = 120
+profile = "black"
+atomic = true
+ensure_newline_before_comments = true
+force_grid_wrap = 0
+include_trailing_comma = true
+lines_after_imports = 2
+multi_line_output = 3
+use_parentheses = true
+known_first_party = ["kazoeru"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+select = [
+    "E",    # pycodestyle
+    "W",    # pycodestyle
+    "F",    # pyflakes
+]
+
+[tool.poe.tasks]
+start = "poetry run python -m kazoeru"
+lint = "pre-commit run --all-files"
+precomit = "pre-commit install"
 black = "^23.9.1"
 
 [build-system]

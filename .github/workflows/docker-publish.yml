@@ -9,17 +9,15 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  builds:
-    
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
       # Log into the registry
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
@@ -28,7 +26,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       # Extract metadata (tags, labels) for Docker
       - name: Extract Docker metadata
         id: meta
