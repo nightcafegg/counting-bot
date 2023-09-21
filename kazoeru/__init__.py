@@ -25,9 +25,9 @@ def setup_logging():
 
     rich_handler = RichHandler(rich_tracebacks=True)
 
-    logging.basicConfig(level=logging.DEBUG, handlers=[file_handler, rich_handler])
+    logging.basicConfig(level=logging.INFO, handlers=[file_handler, rich_handler])
 
-    # logging.getLogger("disnake").setLevel(logging.WARNING)
+    logging.getLogger("disnake").setLevel(logging.WARNING)
 
 
 setup_logging()
