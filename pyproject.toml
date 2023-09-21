@@ -52,6 +52,7 @@ select = [
 start = "poetry run python -m kazoeru"
 lint = "pre-commit run --all-files"
 precomit = "pre-commit install"
+black = "^23.9.1"
 
 [build-system]
 requires = ["poetry-core"]
