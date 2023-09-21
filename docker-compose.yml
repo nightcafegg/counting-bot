@@ -7,6 +7,8 @@ services:
     environment:
       - REDIS_URI=redis://redis:6379
       - DB_BIND=postgresql+asyncpg://kazoeru:kazoeru@postgres:5432/kazoeru
+    env_file:
+      - .env
     volumes:
       - /etc/kazoeru/data:/bot/kazoeru/data
 
@@ -18,6 +20,8 @@ services:
       - POSTGRES_DB=kazoeru
       - POSTGRES_USER=kazoeru
       - POSTGRES_PASSWORD=kazoeru
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "kazoeru"]
       interval: 2s
