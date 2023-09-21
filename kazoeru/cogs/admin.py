@@ -4,7 +4,7 @@ import disnake
 from disnake.ext import commands
 from sqlalchemy.orm import Session
 
-from kazoeru.db.models import Guild
+from kazoeru.db.guild import Guild
 from kazoeru.embed import Embed
 
 
@@ -14,8 +14,6 @@ log = logging.getLogger(__name__)
 class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-        Guild.__table__.create(self.bot.engine, checkfirst=True)
 
     @commands.Cog.listener()
     async def on_slash_command_error(self, inter: disnake.ApplicationCommandInteraction, error: Exception) -> None:

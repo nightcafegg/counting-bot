@@ -3,7 +3,7 @@ from disnake.ext import commands
 from sqlalchemy.orm import Session
 
 from kazoeru.constants import Emojis
-from kazoeru.db.models import Guild
+from kazoeru.db.guild import Guild
 from kazoeru.embed import Embed
 
 

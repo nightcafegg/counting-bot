@@ -10,7 +10,7 @@ class Embed:
             description=f"> {description}" if description else None,
             color=constants.Colors.success,
         )
-        embed.set_author(name=title, icon_url=constants.Images.success)
+        embed.set_author(name=title, icon_url=constants.Icons.success)
         if footer:
             embed.set_footer(text=f"{guild.name} • {guild.id}")
         return embed
@@ -21,7 +21,7 @@ class Embed:
             description=f"> {description}" if description else None,
             color=constants.Colors.error,
         )
-        embed.set_author(name=title, icon_url=constants.Images.error)
+        embed.set_author(name=title, icon_url=constants.Icons.error)
         if footer:
             embed.set_footer(text=f"{guild.name} • {guild.id}")
         return embed
@@ -32,7 +32,7 @@ class Embed:
             description=f"> {description}" if description else None,
             color=constants.Colors.info,
         )
-        embed.set_author(name=title, icon_url=constants.Images.info)
+        embed.set_author(name=title, icon_url=constants.Icons.info)
         if footer:
             embed.set_footer(text=f"{guild.name} • {guild.id}")
         return embed

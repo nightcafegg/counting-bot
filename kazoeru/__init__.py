@@ -13,7 +13,8 @@ dotenv.load_dotenv()
 
 def setup_logging():
     logging.basicConfig(level=logging.INFO, handlers=[RichHandler(rich_tracebacks=True)])
-    logging.getLogger("disnake").setLevel(logging.INFO)
+
+    logging.getLogger("disnake").setLevel(logging.WARNING)
 
 
 setup_logging()

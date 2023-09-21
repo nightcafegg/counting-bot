@@ -1,12 +1,17 @@
+import asyncio
 import logging
 import os
+import signal
+import sys
 
 import disnake
 import redis
-import sqlalchemy
+import redis.asyncio
 from disnake.ext import commands
 
 from kazoeru import constants
+from kazoeru.bot import Kazoeru
+from kazoeru.db import Base
 
 
 log = logging.getLogger(__name__)
@@ -19,18 +24,19 @@ def load_extensions(bot: commands.AutoShardedInteractionBot):
             log.info(f"Loaded extension kazoeru.cogs.{file[:-3]}")
 
 
-def main():
+async def main():
     disnake.VoiceClient.warn_nacl = False
 
-    engine = sqlalchemy.create_engine(
-        "sqlite:///kazoeru/data/kazoeru.sqlite",
-    )
-
-    r = redis.Redis(
-        host=os.environ.get("REDIS_HOST"),
-        port=os.environ.get("REDIS_PORT"),
-        db=os.environ.get("REDIS_DB"),
-    )
+    if constants.Redis.use_fakeredis:
+        try:
+            import fakeredis
+            import fakeredis.aioredis
+        except ImportError as e:
+            raise RuntimeError("You need to install fakeredis to use fakeredis") from e
+        redis_session = fakeredis.aioredis.FakeRedis.from_url(constants.Redis.uri)
+    else:
+        pool = redis.asyncio.BlockingConnectionPool.from_url(constants.Redis.uri, max_connections=20, timeout=300)
+        redis_session = redis.asyncio.Redis(connection_pool=pool)
 
     command_sync_flags = commands.CommandSyncFlags(
         allow_command_deletion=False,
@@ -44,24 +50,31 @@ def main():
     intents.messages = True
     intents.message_content = True
 
-    bot = commands.AutoShardedInteractionBot(intents=intents, command_sync_flags=command_sync_flags)
+    bot = Kazoeru(redis_session=redis_session, intents=intents, command_sync_flags=command_sync_flags)
 
-    bot.redis = r
-    bot.engine = engine
+    load_extensions(bot)
 
-    @bot.event
-    async def on_ready():
-        load_extensions(bot)
-        log.info(f"Logged in as {bot.user} ({bot.user.id})")
-        log.info(f"Connected to {len(bot.guilds)} guilds")
+    async with bot.db_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
-    @bot.event
-    async def on_guild_join(guild: disnake.Guild):
-        log.info(f"Joined guild {guild.name} [{guild.id}]")
-        log.info(f"Connected to {len(bot.guilds)} guilds")
+    loop = asyncio.get_running_loop()
 
-    bot.run(constants.Client.token)
+    future: asyncio.Future = asyncio.ensure_future(bot.start(constants.Client.token or ""), loop=loop)
+
+    if sys.platform != "win32":
+        loop.add_signal_handler(signal.SIGINT, lambda: future.cancel())
+        loop.add_signal_handler(signal.SIGTERM, lambda: future.cancel())
+    try:
+        await future
+    except asyncio.CancelledError:
+        log.info("Received signal to terminate bot and event loop")
+    finally:
+        if not bot.is_closed():
+            await bot.close()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        sys.exit(asyncio.run(main()))
+    except KeyboardInterrupt:
+        sys.exit(0)

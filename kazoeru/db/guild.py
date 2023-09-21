@@ -1,9 +1,6 @@
 from sqlalchemy import Boolean, Column, Integer
-from sqlalchemy.orm import DeclarativeBase
 
-
-class Base(DeclarativeBase):
-    pass
+from kazoeru.db.base import Base
 
 
 class Guild(Base):

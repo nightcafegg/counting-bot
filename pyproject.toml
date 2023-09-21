@@ -14,6 +14,8 @@ python-dotenv = "^1.0.0"
 pyyaml = "^6.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.21"}
 asyncpg = "^0.28.0"
+arrow = "^1.2.3"
+fakeredis = "^2.18.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
@@ -47,6 +49,7 @@ select = [
 ]
 
 [tool.poe.tasks]
+start = "poetry run python -m kazoeru"
 lint = "pre-commit run --all-files"
 precomit = "pre-commit install"
 
