@@ -6,11 +6,10 @@ import redis
 import sqlalchemy
 from disnake.ext import commands
 
+from kazoeru import constants
+
 
 log = logging.getLogger(__name__)
-_intents = disnake.Intents.default()
-_intents.messages = True
-_intents.message_content = True
 
 
 def load_extensions(bot: commands.AutoShardedInteractionBot):
@@ -41,7 +40,11 @@ def main():
         sync_on_cog_actions=True,
     )
 
-    bot = commands.AutoShardedInteractionBot(intents=_intents, command_sync_flags=command_sync_flags)
+    intents = disnake.Intents.default()
+    intents.messages = True
+    intents.message_content = True
+
+    bot = commands.AutoShardedInteractionBot(intents=intents, command_sync_flags=command_sync_flags)
 
     bot.redis = r
     bot.engine = engine
@@ -57,7 +60,7 @@ def main():
         log.info(f"Joined guild {guild.name} [{guild.id}]")
         log.info(f"Connected to {len(bot.guilds)} guilds")
 
-    bot.run(os.environ.get("DISCORD_TOKEN"))
+    bot.run(constants.Client.token)
 
 
 if __name__ == "__main__":

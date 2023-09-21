@@ -1,6 +1,6 @@
 import disnake
 
-from kazoeru import config
+from kazoeru import constants
 
 
 class Embed:
@@ -8,9 +8,9 @@ class Embed:
     def success(guild: disnake.Guild, title: str, description: str = None, footer: bool = True) -> disnake.Embed:
         embed = disnake.Embed(
             description=f"> {description}" if description else None,
-            color=config.Color.success,
+            color=constants.Colors.success,
         )
-        embed.set_author(name=title, icon_url=config.Image.success)
+        embed.set_author(name=title, icon_url=constants.Images.success)
         if footer:
             embed.set_footer(text=f"{guild.name} • {guild.id}")
         return embed
@@ -19,9 +19,9 @@ class Embed:
     def error(guild: disnake.Guild, title: str, description: str = None, footer: bool = True) -> disnake.Embed:
         embed = disnake.Embed(
             description=f"> {description}" if description else None,
-            color=config.Color.error,
+            color=constants.Colors.error,
         )
-        embed.set_author(name=title, icon_url=config.Image.error)
+        embed.set_author(name=title, icon_url=constants.Images.error)
         if footer:
             embed.set_footer(text=f"{guild.name} • {guild.id}")
         return embed
@@ -30,9 +30,9 @@ class Embed:
     def info(guild: disnake.Guild, title: str, description: str = None, footer: bool = True) -> disnake.Embed:
         embed = disnake.Embed(
             description=f"> {description}" if description else None,
-            color=config.Color.info,
+            color=constants.Colors.info,
         )
-        embed.set_author(name=title, icon_url=config.Image.info)
+        embed.set_author(name=title, icon_url=constants.Images.info)
         if footer:
             embed.set_footer(text=f"{guild.name} • {guild.id}")
         return embed

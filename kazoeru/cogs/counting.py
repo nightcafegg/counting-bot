@@ -2,7 +2,7 @@ import disnake
 from disnake.ext import commands
 from sqlalchemy.orm import Session
 
-from kazoeru.config import Emote
+from kazoeru.constants import Emojis
 from kazoeru.db.models import Guild
 from kazoeru.embed import Embed
 
@@ -39,11 +39,11 @@ class Counting(commands.Cog):
                 elif int(msg.content) == num + 1:
                     self.bot.redis.incr(f"{msg.guild.id}:count")
                     self.bot.redis.set(f"{msg.guild.id}:last", msg.author.id)
-                    return await msg.add_reaction(Emote.success)
+                    return await msg.add_reaction(Emojis.success)
 
             self.bot.redis.set(f"{msg.guild.id}:count", 0)
             self.bot.redis.set(f"{msg.guild.id}:last", 0)
-            await msg.add_reaction(Emote.error)
+            await msg.add_reaction(Emojis.error)
             embed = Embed.error(
                 guild=msg.guild,
                 title=f"Ruined it at {num}! {description}",
