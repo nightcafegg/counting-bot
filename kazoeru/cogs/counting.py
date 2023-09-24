@@ -75,8 +75,8 @@ class Counting(commands.Cog):
                     await self.bot.redis.set(f"{msg.guild.id}:last", message.author.id)
                     return
 
-    # TODO: Add a command to see the record for the guild
-    # TODO: Add a command to see a leaderboard for all guilds
+    # TODO: #19 Add a command to see the record for the guild
+    # TODO: #20 Add a command to see a leaderboard for all guilds
 
 
 def setup(bot: Kazoeru):

@@ -80,7 +80,7 @@ class Admin(commands.Cog):
             )
             await inter.response.send_message(embed=embed, ephemeral=True)
 
-    # TODO: Add a way to set the count number
+    # TODO: #18 Add a command to set the current count number
 
 
 def setup(bot):
