@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kazoeru"
-version = "0.9.0"
+version = "0.10.0"
 description = ""
 authors = ["Keksi <contact@keksi.me>"]
 readme = "README.md"
