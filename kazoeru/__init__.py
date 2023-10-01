@@ -1,16 +1,31 @@
 import logging
+import os
 import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 import dotenv
+import sentry_sdk
 from rich.logging import RichHandler
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 
 sys.stdout.write("\033[2J\033[H")
 
 
 dotenv.load_dotenv()
+
+
+sentry_logging = LoggingIntegration(
+    level=logging.INFO,
+    event_level=logging.WARNING,
+)
+
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    integrations=[sentry_logging, RedisIntegration()],
+)
 
 
 def setup_logging():
