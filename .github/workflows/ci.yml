@@ -24,7 +24,7 @@ jobs:
           pip install ruff black isort
 
       - name: Run Ruff
-        run: ruff check --format=github .
+        run: ruff check --output-format=github .
 
       - name: Run Black
         run: black --check .
