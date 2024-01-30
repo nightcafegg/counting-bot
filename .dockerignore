@@ -2,8 +2,6 @@
 *
 
 # Make exceptions for what's needed
-!kazoeru/
-!pyproject.toml
-!poetry.lock
+!counting/
+!requirements.txt
 !LICENSE
-!README.md
