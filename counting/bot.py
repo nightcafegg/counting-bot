@@ -11,9 +11,7 @@ __all__ = ("Kazoeru",)
 
 
 class Kazoeru(commands.AutoShardedInteractionBot):
-    """
-    Base Bot instance.
-    """
+    """Base Bot instance."""
 
     name = constants.Client.name
 

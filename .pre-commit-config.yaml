@@ -3,7 +3,6 @@ repos:
     rev: v4.4.0
     hooks:
       - id: check-case-conflict
-      - id: check-json
       - id: check-toml
       - id: check-yaml
       - id: end-of-file-fixer
@@ -18,17 +17,9 @@ repos:
       - id: python-check-blanket-noqa
       - id: python-use-type-annotations
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-
-  - repo: https://github.com/psf/black
-    rev: 23.9.1
-    hooks:
-      - id: black
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.290
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.15
     hooks:
       - id: ruff
+        args: [--fix]
+      - id: ruff-format
