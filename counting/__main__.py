@@ -9,9 +9,9 @@ import redis
 import redis.asyncio
 from disnake.ext import commands
 
-from kazoeru import constants
-from kazoeru.bot import Kazoeru
-from kazoeru.db import Base
+from counting import constants
+from counting.bot import Kazoeru
+from counting.db import Base
 
 
 log = logging.getLogger(__name__)

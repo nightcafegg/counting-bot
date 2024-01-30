@@ -3,9 +3,9 @@ import logging
 import disnake
 from disnake.ext import commands
 
-from kazoeru import constants
-from kazoeru.bot import Kazoeru
-from kazoeru.embed import Embed
+from counting import constants
+from counting.bot import Kazoeru
+from counting.embed import Embed
 
 
 log = logging.getLogger(__name__)

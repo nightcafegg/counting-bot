@@ -1,6 +1,6 @@
 import disnake
 
-from kazoeru import constants
+from counting import constants
 
 
 class Embed:

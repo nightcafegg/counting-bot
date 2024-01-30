@@ -1,10 +1,10 @@
 import disnake
 from disnake.ext import commands
 
-from kazoeru.bot import Kazoeru
-from kazoeru.constants import Emojis
-from kazoeru.db.guild import Guild
-from kazoeru.embed import Embed
+from counting.bot import Kazoeru
+from counting.constants import Emojis
+from counting.db.guild import Guild
+from counting.embed import Embed
 
 
 class Counting(commands.Cog):

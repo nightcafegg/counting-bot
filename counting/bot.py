@@ -4,7 +4,7 @@ import redis.asyncio
 from disnake.ext import commands
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from kazoeru import constants
+from counting import constants
 
 
 __all__ = ("Kazoeru",)

@@ -1,6 +1,6 @@
 from sqlalchemy import BigInteger, Boolean, Column
 
-from kazoeru.db.base import Base
+from counting.db.base import Base
 
 
 class Guild(Base):
