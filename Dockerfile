@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13.0a3-slim
 
 # Set pip to have cleaner logs and no cache
 ENV PIP_NO_CACHE_DIR=false
