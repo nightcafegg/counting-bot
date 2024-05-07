@@ -13,7 +13,7 @@ redis = {extras = ["hiredis"], version = "^5.0.4"}
 rich = "^13.3.5"
 python-dotenv = "^1.0.0"
 pyyaml = "^6.0"
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.21"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.30"}
 asyncpg = "^0.29.0"
 arrow = "^1.2.3"
 fakeredis = "^2.21.0"
