@@ -22,7 +22,7 @@ sentry-sdk = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.4"
-pre-commit = "^3.4.0"
+pre-commit = "^3.7.1"
 
 [tool.ruff]
 line-length = 120
